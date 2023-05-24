@@ -34,7 +34,7 @@ module Lit
         nil
       else
         val = Lit.redis.get(_prefixed_key(key))
-        return val if val.present?
+        return val unless val.nil?
 
         subtree_of_key(key)
       end
