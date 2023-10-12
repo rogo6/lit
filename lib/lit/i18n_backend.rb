@@ -104,8 +104,13 @@ module Lit
       # check in cache or in simple backend
       content = @cache[key_with_locale] || super
 
-      # return if content is in cache - it CAN be `nil`
-      return content if had_key && !options[:default]
+      if had_key
+        # return content if is already in cache and default is not provided
+        return content if !options.has_key?(:lit_default_copy)
+      else
+        # return if is part of candidates?
+        return content if options.has_key?(:lit_default_copy) && options[:lit_default_copy].is_a?(Array) && options[:lit_default_copy].include?(key)
+      end
 
       return content if parts.size <= 1
 
@@ -119,32 +124,14 @@ module Lit
           if options[:lit_default_copy].present?
             # default most likely will be an array
             if options[:lit_default_copy].is_a?(Array)
-              default = options[:lit_default_copy].map do |key_or_value|
-                if key_or_value.is_a?(Symbol)
-                  normalized = I18n.normalize_keys(
-                    nil, key_or_value.to_s, options[:scope], options[:separator]
-                  ).join('.')
-                  if on_rails_6_1_or_higher? && Lit::Services::HumanizeService.should_humanize?(key)
-                    Lit::Services::HumanizeService.humanize(normalized)
-                  else
-                    normalized.to_sym
-                  end
-                else
-                  key_or_value
-                end
-              end
+              last_element = options[:lit_default_copy].last
+              content = last_element if last_element.is_a?(String) && last_element.present?
             else
-              default = options[:lit_default_copy]
+              content = options[:lit_default_copy]
             end
-            content = default
           end
           # if we have content now, let's store it in cache
-          if content.present?
-            content = Array.wrap(content).compact.reject(&:empty?).reverse.find do |default_cand|
-              @cache[key_with_locale] = default_cand
-              @cache[key_with_locale]
-            end
-          end
+          @cache[key_with_locale] = content if content.present?
 
           if content.nil? && !on_rails_6_1_or_higher? && Lit::Services::HumanizeService.should_humanize?(key)
             @cache[key_with_locale] = Lit::Services::HumanizeService.humanize(key)
