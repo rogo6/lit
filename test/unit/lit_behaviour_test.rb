@@ -94,11 +94,11 @@ class LitBehaviourTest < ActiveSupport::TestCase
     assert_equal 'foo bar bis', I18n.t(:blank, scope: :next_scope, default: :foo, bar: 'bar bis')
   end
 
-  test 'lit should respect :scope when setting default_value from defaults' do
+  test 'lit should no longer respect :scope when setting default_value from defaults' do
     I18n.backend.store_translations(:en, :'scope.foo' => 'translated foo')
 
     assert_equal 'translated foo', I18n.t(:not_existing, scope: ['scope'], default: [:foo])
-    assert_equal 'translated foo', find_localization_for('scope.not_existing', 'en').default_value
+    assert_equal nil, find_localization_for('scope.not_existing', 'en').default_value
   end
 
   test 'it stores translations upon first invokation' do

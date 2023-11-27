@@ -75,7 +75,6 @@ module Lit
     def soft_destroy
       ActiveRecord::Base.transaction do
         update is_deleted: true
-        change_all_completed
         remove_from_cache
       end
     end
@@ -87,10 +86,7 @@ module Lit
     end
 
     def restore
-      ActiveRecord::Base.transaction do
-        update is_deleted: false, is_completed: false, is_visited_again: false
-        localizations.update_all is_changed: false
-      end
+      update is_deleted: false, is_visited_again: false
     end
 
     private

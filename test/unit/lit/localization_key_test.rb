@@ -42,7 +42,6 @@ module Lit
       assert_not @loc2.is_changed
       @lk.soft_destroy
       assert @lk.reload.is_deleted
-      assert @lk.localizations.all?(&:is_changed)
     end
 
     test '#soft_destroy should delete translation key from memoized objects' do
@@ -61,7 +60,6 @@ module Lit
       assert @lk.is_visited_again
       @lk.restore
       assert_not @lk.is_deleted
-      assert_not @lk.is_completed
       assert_not @lk.is_visited_again
     end
   end

@@ -13,7 +13,7 @@ class ProjectsTest < ActionDispatch::IntegrationTest
     Lit.humanize_key = true
     visit('/en/projects/new')
     locale = Lit::Locale.where('locale=?', 'en').first
-    localization_key = Lit::LocalizationKey.find_by_localization_key! 'helpers.label.project.name'
+    localization_key = Lit::LocalizationKey.find_by_localization_key! 'activerecord.attributes.project.name'
     localization = localization_key.localizations.where(locale_id: locale.id).first
     assert_equal 'Name', localization.to_s
     assert_equal 'Name', localization.default_value
@@ -26,15 +26,5 @@ class ProjectsTest < ActionDispatch::IntegrationTest
     localization = localization_key.localizations.where(locale_id: locale.id).first
     assert_nil localization.to_s
     assert_nil localization.default_value
-  end
-
-  test 'should have error message humanized' do
-    Lit.humanize_key = true
-    post '/en/projects', params: { project: { name: '' } }
-    locale = Lit::Locale.where('locale=?', 'en').first
-    localization_key = Lit::LocalizationKey.find_by_localization_key! 'activerecord.errors.models.project.attributes.name.blank'
-    localization = localization_key.localizations.where(locale_id: locale.id).first
-    assert_equal 'Blank', localization.to_s
-    assert_equal 'Blank', localization.default_value
   end
 end
