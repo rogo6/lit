@@ -98,7 +98,7 @@ class LitBehaviourTest < ActiveSupport::TestCase
     I18n.backend.store_translations(:en, :'scope.foo' => 'translated foo')
 
     assert_equal 'translated foo', I18n.t(:not_existing, scope: ['scope'], default: [:foo])
-    assert_equal nil, find_localization_for('scope.not_existing', 'en').default_value
+    assert_nil(find_localization_for('scope.not_existing', 'en').default_value)
   end
 
   test 'it stores translations upon first invokation' do

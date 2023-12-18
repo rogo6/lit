@@ -9,7 +9,7 @@ class ProjectsTest < ActionDispatch::IntegrationTest
     Lit.humanize_key = @old
   end
 
-  test 'should display translated project name' do
+  test 'should not display empty name' do
     Lit.humanize_key = true
     visit('/en/projects/new')
     locale = Lit::Locale.where('locale=?', 'en').first

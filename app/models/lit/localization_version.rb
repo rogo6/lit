@@ -1,6 +1,6 @@
 module Lit
   class LocalizationVersion < ActiveRecord::Base
-    serialize :translated_value
+    serialize :translated_value, coder: YAML
 
     ## ASSOCIATIONS
     belongs_to :localization

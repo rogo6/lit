@@ -1,7 +1,7 @@
 module Lit
   class Localization < Lit::Base
-    serialize :translated_value
-    serialize :default_value
+    serialize :translated_value, coder: YAML
+    serialize :default_value, coder: YAML
 
     ## SCOPES
     scope :changed, -> { where is_changed: true }
