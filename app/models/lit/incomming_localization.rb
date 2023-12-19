@@ -1,6 +1,6 @@
 module Lit
   class IncommingLocalization < ActiveRecord::Base
-    serialize :translated_value
+    serialize :translated_value, coder: YAML
 
     ## ASSOCIATIONS
     belongs_to :locale
